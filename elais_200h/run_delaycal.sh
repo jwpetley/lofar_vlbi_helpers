@@ -9,11 +9,11 @@
 
 export TOIL_SLURM_ARGS="--export=ALL -t 12:00:00"
 
-SING_BIND="/project,/project/lofarvwf/Software,/project/lofarvwf/Share,/project/lofarvwf/Public"
-DELAYCAL=/project/lofarvwf/Share/jdejong/output/ELAIS/delaycalibrator.csv
-CONFIG=/project/lofarvwf/Share/jdejong/output/ELAIS/delaysolve_config.txt
+SING_BIND="/project,/project/wfedfn/Software,/project/wfedfn/Share,/project/wfedfn/Public"
+DELAYCAL=/project/wfedfn/Share/petley/output/EDFN/delaycalibrator.csv
+CONFIG=/project/wfedfn/Share/petley/output/EDFN/delaysolve_config.txt
 
-VENV=/project/lofarvwf/Software/venv
+VENV=/project/wfedfn/Software/venv
 
 export DDFOLDER=$(realpath "../ddf")
 export TARGETDATA=$(realpath "../target/data")
@@ -45,7 +45,7 @@ cd ../
 # set up singularity
 export SIMG=vlbi-cwl.sif
 mkdir -p singularity
-cp /project/lofarvwf/Software/singularity/flocs_v5.4.1_znver2_znver2.sif singularity/$SIMG
+cp /project/wfedfn/Software/singularity/flocs_v5.5.1_znver2_znver2.sif singularity/$SIMG
 mkdir -p singularity/pull
 cp singularity/$SIMG singularity/pull/$SIMG
 
@@ -117,7 +117,7 @@ jq '. + {"ms_suffix": ".MS"}' mslist_VLBI_delay_calibration.json > temp.json && 
 
 #source ${VENV}/bin/activate
 
-TGSSphase_final_lines=$(singularity exec -B /project/lofarvwf singularity/$SIMG python software/lofar_helpers/h5_merger.py -in=$SOLSET | grep "TGSSphase" | wc -l)
+TGSSphase_final_lines=$(singularity exec -B /project/wfedfn singularity/$SIMG python software/lofar_helpers/h5_merger.py -in=$SOLSET | grep "TGSSphase" | wc -l)
 # Check if the line count is greater than 1
 if [ "$TGSSphase_final_lines" -ge 1 ]; then
     echo "Use TGSSphase_final"
