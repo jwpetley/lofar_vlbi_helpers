@@ -9,12 +9,12 @@ SIMG=$( python3 $HOME/parse_settings.py --SIMG )
 BIND=$( python3 $HOME/parse_settings.py --BIND )
 echo "SINGULARITY IS $SIMG"
 
-pattern="*${P}*.ms"
+pattern="${P}*.ms"
 MS_FILES=( $pattern )
 MS=${MS_FILES[${SLURM_ARRAY_TASK_ID}]}
 
 singularity exec -B $BIND $SIMG \
-python /home/lofarvwf-jdejong/scripts/lofar_vlbi_helpers/applycal/applycal.py \
---msin $MS \
+python /project/wfedfn/Software/lofar_helpers/ms_helpers/applycal.py \
 --h5 ${H5} \
---msout applycal_${MS##*/}
+--msout applycal_${MS##*/} \
+$MS

@@ -15,7 +15,7 @@ RUNDIR=$TMPDIR/ddf
 mkdir -p $RUNDIR
 mkdir -p $OUTPUT
 
-SIMG=flocs_v5.5.1_znver2_znver2.sif
+SIMG=flocs_v5.6.0_znver2_znver2.sif
 
 cd $RUNDIR
 
@@ -25,6 +25,12 @@ wget https://raw.githubusercontent.com/LOFAR-VLBI/lofar_vlbi_helpers/refs/heads/
 cp /project/wfedfn/Software/singularity/${SIMG} .
 
 cp -r $START/target/L??????_LINC_target/results_LINC_target/results/*.ms .
+
+# #Insert decompression DP3 step to make this work
+# for FILE in *.ms
+# do 
+#     singularity exec -B $PWD,$OUTPUT $SIMG DP3 msin=${FILE} msout=${FILE} steps=[] msout.storagemanager="dysco" msout.antennacompression=False msout.uvwcompression=False
+# done
 
 singularity exec -B $PWD,$OUTPUT $SIMG make_mslists.py
 singularity exec -B $PWD,$OUTPUT $SIMG pipeline.py pipeline.cfg

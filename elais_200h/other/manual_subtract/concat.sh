@@ -11,5 +11,5 @@ singularity exec -B $SING_BIND $SIMG python /project/wfedfn/Software/lofar_helpe
 --msin *sub6asec*.ms \
 --time_res 8 \
 --freq_res '97656.25Hz' \
---phase_center '[16h06m07.61855,55d21m35.4166]' \
+--phase_center '[17h47m13.90,65d32m35.88]' \
 --msout ${OBSERVATION}_DI.concat.ms

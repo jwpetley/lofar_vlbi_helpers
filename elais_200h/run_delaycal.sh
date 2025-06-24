@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --output=delay_%j.out
 #SBATCH --error=delay_%j.err
-#SBATCH -t 50:00:00
+#SBATCH -t 70:00:00
 
 ######################
 #### UPDATE THESE ####
@@ -27,11 +27,14 @@ source ${VENV}/bin/activate
 
 mkdir -p software
 cd software
-git clone -b js-subtract https://git.astron.nl/RD/VLBI-cwl.git VLBI_cwl
+git clone https://git.astron.nl/RD/VLBI-cwl.git VLBI_cwl
 git clone https://github.com/tikk3r/flocs.git
 git clone https://github.com/jurjen93/lofar_helpers.git
 git clone https://github.com/rvweeren/lofar_facet_selfcal.git
 git clone https://git.astron.nl/RD/LINC.git
+cd LINC
+git checkout 133ca31bc9d40bc53d6abd019119f0090cd46e9d
+cd ..
 git clone https://github.com/revoltek/losoto
 mkdir scripts
 cp LINC/scripts/* scripts
@@ -45,7 +48,7 @@ cd ../
 # set up singularity
 export SIMG=vlbi-cwl.sif
 mkdir -p singularity
-cp /project/wfedfn/Software/singularity/flocs_v5.5.1_znver2_znver2.sif singularity/$SIMG
+cp /project/wfedfn/Software/singularity/flocs_v5.5.0_znver2_znver2.sif singularity/$SIMG
 mkdir -p singularity/pull
 cp singularity/$SIMG singularity/pull/$SIMG
 
@@ -84,11 +87,13 @@ singularity exec singularity/$SIMG \
 python software/lofar_facet_selfcal/submods/h5_merger.py \
 --h5_tables DDF*.h5 \
 --h5_out DDF_merged.h5 \
---propagate_flags \
 --add_ms_stations \
 --ms $( ls $TARGETDATA/*.MS -1d | head -n 1) \
 --merge_diff_freq \
 --h5_time_freq true
+
+
+# --propagate_flags \
 
 ########################
 
@@ -141,7 +146,7 @@ TMPD=$PWD/tmpdir
 mkdir -p $WORKDIR
 mkdir -p $OUTPUT
 mkdir -p $LOGDIR
-
+mkdir -p $TMPD
 
 ########################
 
@@ -154,7 +159,7 @@ toil-cwl-runner \
 --logFile full_log.log \
 --writeLogs ${LOGDIR} \
 --outdir ${OUTPUT} \
---tmp-outdir-prefix ${TMPD}/ \
+--tmp-outdir-prefix tmpdir/tmp_ \
 --jobStore ${JOBSTORE} \
 --workDir ${WORKDIR} \
 --disableAutoDeployment True \

@@ -30,7 +30,7 @@ mkdir -p software
 cd software
 git clone -b ddcal_widefield https://git.astron.nl/RD/VLBI-cwl.git VLBI_cwl
 git clone https://github.com/jurjen93/lofar_helpers.git
-git clone -b phasediff-update https://github.com/rvweeren/lofar_facet_selfcal.git
+git clone -b early_stopping https://github.com/rvweeren/lofar_facet_selfcal.git
 git clone https://git.astron.nl/RD/LINC.git
 
 mkdir scripts
@@ -46,7 +46,8 @@ cd ../
 # set up singularity
 SIMG=vlbi-cwl.sif
 mkdir -p singularity
-wget https://public.spider.surfsara.nl/project/lofarvwf/fsweijen/containers/flocs_v5.5.1_znver2_znver2.sif -O singularity/$SIMG
+#wget https://public.spider.surfsara.nl/project/lofarvwf/fsweijen/containers/flocs_v5.5.1_znver2_znver2.sif -O singularity/$SIMG
+cp /project/wfedfn/Software/singularity/flocs_v5.5.1_znver2_znver2.sif singularity/$SIMG
 mkdir -p singularity/pull
 cp singularity/$SIMG singularity/pull/$SIMG
 
@@ -106,6 +107,7 @@ TMPD=$PWD/tmpdir
 mkdir -p $WORKDIR
 mkdir -p $OUTPUT
 mkdir -p $LOGDIR
+mkdir -p $TMPD
 
 ########################
 
@@ -113,20 +115,22 @@ mkdir -p $LOGDIR
 
 toil-cwl-runner \
 --no-read-only \
---retryCount 3 \
+--retryCount 2 \
 --singularity \
 --disableCaching \
+--restart \
+--writeLogsFromAllJobs True \
 --logFile full_log.log \
 --writeLogs ${LOGDIR} \
 --outdir ${OUTPUT} \
---tmp-outdir-prefix ${TMPD}/ \
+--tmp-outdir-prefix ${TMPD}/tmp_ \
 --jobStore ${JOBSTORE} \
 --workDir ${WORKDIR} \
 --disableAutoDeployment True \
 --bypass-file-store \
 --batchSystem slurm \
 --cleanWorkDir onSuccess \
---eval-timeout 4000 \
+--eval-timeout 10000 \
 --setEnv PATH=$VLBI_DATA_ROOT/scripts:$LINC_DATA_ROOT/scripts:\$PATH \
 --setEnv PYTHONPATH=$VLBI_DATA_ROOT/scripts:$LINC_DATA_ROOT/scripts:\$PYTHONPATH \
 software/VLBI_cwl/workflows/dd-calibration.cwl input.json
