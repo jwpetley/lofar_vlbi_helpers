@@ -14,8 +14,8 @@ MSDATA=$(realpath $2)
 
 export TOIL_SLURM_ARGS="--export=ALL -t 36:00:00"
 
-SING_BIND="/project,/project/lofarvwf/Software,/project/lofarvwf/Share,/project/lofarvwf/Public"
-VENV=/project/lofarvwf/Software/venv
+SING_BIND="/project,/project/wfedfn/Software,/project/wfedfn/Share,/project/wfedfn/Public"
+VENV=/project/wfedfn/Software/venv
 
 ######################
 ######################

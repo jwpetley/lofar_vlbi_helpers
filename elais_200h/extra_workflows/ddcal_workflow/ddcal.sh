@@ -6,8 +6,8 @@
 #### INPUT ###
 LNUM=$1
 
-mkdir -p /project/lofarvwf/Share/jdejong/output/ELAIS/${LNUM}/${LNUM}/ddcal/selfcals
-cd /project/lofarvwf/Share/jdejong/output/ELAIS/${LNUM}/${LNUM}/ddcal/selfcals
+mkdir -p /project/wfedfn/Data/${LNUM}/delay_cal/ddcal/selfcals
+cd /project/wfedfn/Data/${LNUM}/delay_cal/ddcal/selfcals
 
 ######################
 #### UPDATE THESE ####
@@ -15,8 +15,8 @@ cd /project/lofarvwf/Share/jdejong/output/ELAIS/${LNUM}/${LNUM}/ddcal/selfcals
 
 export TOIL_SLURM_ARGS="--export=ALL --job-name ${LNUM} -p normal --constraint=rome"
 
-SING_BIND="/project,/project/lofarvwf/Software,/project/lofarvwf/Share,/project/lofarvwf/Public,/home/lofarvwf-jdejong"
-SCRIPTS=/home/lofarvwf-jdejong/scripts/lofar_vlbi_helpers/elais_200h/extra_workflows/ddcal_workflow
+SING_BIND="/project,/project/wfedfn/Software,/project/wfedfn/Share,/project/wfedfn/Public,/home/wfedfn-jpetley"
+SCRIPTS=/home/wfedfn-jpetley/scripts/lofar_vlbi_helpers/elais_200h/extra_workflows/ddcal_workflow
 DUTCHh5parm=/project/lofarvwf/Share/jdejong/output/ELAIS/ALL_200h/6asec_sets/joinedsolutions/merged_skyselfcalcyle000_${LNUM}_6asec.ms.copy.avg.h5
 DDELECT=/project/lofarvwf/Share/jdejong/output/ELAIS/final_dd_selection.csv
 
@@ -114,6 +114,7 @@ TMPD=$PWD/tmpdir
 mkdir -p $WORKDIR
 mkdir -p $OUTPUT
 mkdir -p $LOGDIR
+mkdir -p $TMPD
 
 source ${VENV}/bin/activate
 

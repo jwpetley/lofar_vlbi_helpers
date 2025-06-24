@@ -11,14 +11,14 @@ CSV=$1
 
 export TOIL_SLURM_ARGS="--export=ALL -t 12:00:00"
 
-SING_BIND="/project,/project/lofarvwf/Software,/project/lofarvwf/Share,/project/lofarvwf/Public"
+SING_BIND="/project,/project/wfedfn/Software,/project/wfedfn/Share,/project/wfedfn/Public"
 CAT=${CSV}
 if [[ $PWD =~ L[0-9]{6} ]]; then LNUM=${BASH_REMATCH[0]}; fi
-SOLSET=/project/lofarvwf/Share/jdejong/output/ELAIS/${LNUM}/${LNUM}/dical/merged_skyselfcalcyle000_linearfulljones_${LNUM}_DI.concat.ms.avg.h5
-CONFIG=/project/lofarvwf/Share/jdejong/output/ELAIS/delaysolve_config.txt
-DD_SELECTION="false" #or true?
+SOLSET=/project/wfedfn/Data/${LNUM}/delay_cal/dical/merged_selfcalcyle006_linearfulljones_${LNUM}_DI.concat.ms.avg.h5
+CONFIG=/project/wfedfn/Share/petley/output/EDFN/delaysolve_config.txt
+DD_SELECTION="true" #or true?
 
-VENV=/project/lofarvwf/Software/venv
+VENV=/project/wfedfn/Software/venv
 
 SUBTRACTDATA=$(realpath "../../subtract")
 
@@ -50,9 +50,9 @@ PTH=${PWD}/VLBI_cwl/scripts:${PWD}/LINC/scripts:\$PATH
 cd ../
 
 # set up singularity
-SIMG=vlbi-cwl.sif
+SIMG=flocs_v5.6.0_sandybridge_sandybridge.sif
 mkdir -p singularity
-wget https://lofar-webdav.grid.sara.nl/software/shub_mirror/tikk3r/lofar-grid-hpccloud/amd/flocs_v5.0.0_znver2_znver2_aocl_cuda.sif -O singularity/$SIMG
+wget https://public.spider.surfsara.nl/project/lofarvwf/fsweijen/containers/${SIMG} -O singularity/$SIMG
 mkdir -p singularity/pull
 cp singularity/$SIMG singularity/pull/$SIMG
 

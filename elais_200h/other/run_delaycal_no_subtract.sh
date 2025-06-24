@@ -8,11 +8,11 @@
 
 export TOIL_SLURM_ARGS="--export=ALL --job-name preprocess -p normal -t 12:00:00"
 
-SING_BIND="/project/lofarvwf/Software,/project/lofarvwf/Share,/project/lofarvwf/Public"
-DELAYCAL=/project/lofarvwf/Share/jdejong/output/ELAIS/delaycalibrator.csv
-CONFIG=/project/lofarvwf/Share/jdejong/output/ELAIS/delaysolve_config.txt
+SING_BIND="/project/wfedfn/Software,/project/wfedfn/Share,/project/wfedfn/Public,/project"
+DELAYCAL=/project/wfedfn/Share/petley/output/EDFN/delaycalibrator.csv
+CONFIG=/project/wfedfn/Share/petley/output/EDFN/delaysolve_config.txt
 
-VENV=/project/lofarvwf/Software/venv
+VENV=/project/wfedfn/Software/venv
 
 ######################
 
@@ -115,7 +115,7 @@ jq '. + {"ms_suffix": ".MS"}' mslist_VLBI_delay_calibration.json > temp.json && 
 
 #source ${VENV}/bin/activate
 
-TGSSphase_final_lines=$(singularity exec -B /project/lofarvwf singularity/$SIMG python software/lofar_helpers/h5_merger.py -in=$SOLSET | grep "TGSSphase" | wc -l)
+TGSSphase_final_lines=$(singularity exec -B /project/wfedfn singularity/$SIMG python software/lofar_helpers/h5_merger.py -in=$SOLSET | grep "TGSSphase" | wc -l)
 # Check if the line count is greater than 1
 if [ "$TGSSphase_final_lines" -ge 1 ]; then
     echo "Use TGSSphase_final"
@@ -139,19 +139,20 @@ TMPD=$PWD/tmpdir
 mkdir -p $WORKDIR
 mkdir -p $OUTPUT
 mkdir -p $LOGDIR
+mkdir -p $TMPD
 
 ########################
 
 # RUN TOIL
 
 toil-cwl-runner \
---retryCount 1 \
+--retryCount 3 \
 --singularity \
 --disableCaching \
 --logFile full_log.log \
 --writeLogs ${LOGDIR} \
 --outdir ${OUTPUT} \
---tmp-outdir-prefix ${TMPD}/ \
+--tmp-outdir-prefix ${TMPD}/tmp_ \
 --jobStore ${JOBSTORE} \
 --workDir ${WORKDIR} \
 --disableAutoDeployment True \
